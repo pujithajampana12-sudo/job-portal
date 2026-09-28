@@ -88,7 +88,7 @@ export const AuthModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="relative bg-white rounded-xl shadow-2xl max-w-md w-full border border-slate-200 overflow-hidden my-8">
         {/* Header */}
         <div className="px-6 pt-6 pb-4 border-b border-slate-100 flex items-center justify-between">
@@ -309,17 +309,31 @@ export const AuthModal: React.FC = () => {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Degree / Education
-                </label>
-                <input
-                  type="text"
-                  value={degree}
-                  onChange={e => setDegree(e.target.value)}
-                  placeholder="e.g. B.Tech Computer Science, BCA, B.Sc"
-                  className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Degree / Qualification
+                  </label>
+                  <input
+                    type="text"
+                    value={degree}
+                    onChange={e => setDegree(e.target.value)}
+                    placeholder="e.g. B.Tech CS, BCA, MCA"
+                    className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    College / University
+                  </label>
+                  <input
+                    type="text"
+                    value={institution}
+                    onChange={e => setInstitution(e.target.value)}
+                    placeholder="e.g. State University, NIT"
+                    className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  />
+                </div>
               </div>
 
               <div>

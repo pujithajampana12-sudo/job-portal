@@ -34,11 +34,11 @@ export const ProfileView: React.FC = () => {
   const [experienceLevel, setExperienceLevel] = useState<ExperienceLevel>(user?.experienceLevel || 'Fresher / Entry');
   const [experienceSummary, setExperienceSummary] = useState(user?.experienceSummary || '');
 
-  // Education
-  const [degree, setDegree] = useState(user?.education.degree || '');
-  const [institution, setInstitution] = useState(user?.education.institution || '');
-  const [graduationYear, setGraduationYear] = useState(user?.education.graduationYear || '2026');
-  const [cgpaOrGrade, setCgpaOrGrade] = useState(user?.education.cgpaOrGrade || '');
+  // Education with safe optional chaining
+  const [degree, setDegree] = useState(user?.education?.degree || '');
+  const [institution, setInstitution] = useState(user?.education?.institution || '');
+  const [graduationYear, setGraduationYear] = useState(user?.education?.graduationYear || '2026');
+  const [cgpaOrGrade, setCgpaOrGrade] = useState(user?.education?.cgpaOrGrade || '');
 
   // Skills
   const [skills, setSkills] = useState<string[]>(user?.skills || []);
@@ -50,17 +50,17 @@ export const ProfileView: React.FC = () => {
   // Sync state if user changes in context
   useEffect(() => {
     if (user) {
-      setName(user.name);
-      setEmail(user.email);
-      setPhone(user.phone);
-      setLocation(user.location);
-      setHeadline(user.headline);
-      setExperienceLevel(user.experienceLevel);
-      setExperienceSummary(user.experienceSummary);
-      setDegree(user.education.degree);
-      setInstitution(user.education.institution);
-      setGraduationYear(user.education.graduationYear);
-      setCgpaOrGrade(user.education.cgpaOrGrade || '');
+      setName(user.name || '');
+      setEmail(user.email || '');
+      setPhone(user.phone || '');
+      setLocation(user.location || '');
+      setHeadline(user.headline || '');
+      setExperienceLevel(user.experienceLevel || 'Fresher / Entry');
+      setExperienceSummary(user.experienceSummary || '');
+      setDegree(user.education?.degree || '');
+      setInstitution(user.education?.institution || '');
+      setGraduationYear(user.education?.graduationYear || '2026');
+      setCgpaOrGrade(user.education?.cgpaOrGrade || '');
       setSkills(user.skills || []);
     }
   }, [user]);
@@ -112,13 +112,21 @@ export const ProfileView: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Read or simulate resume content
-    const reader = new FileReader();
-    reader.onload = () => {
-      const textSample = `Resume File: ${file.name}\nSize: ${(file.size / 1024).toFixed(1)} KB\nLast Modified: ${new Date(file.lastModified).toLocaleDateString()}\nApplicant: ${name}\nSkills: ${skills.join(', ')}`;
-      uploadResume(file.name, textSample);
-    };
-    reader.readAsText(file);
+    if (file.type.includes('text') || file.name.endsWith('.txt')) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const textSample = typeof reader.result === 'string' ? reader.result : '';
+        uploadResume(file.name, textSample);
+      };
+      reader.onerror = () => {
+        uploadResume(file.name, `Resume document: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
+      };
+      reader.readAsText(file);
+    } else {
+      const today = new Date().toISOString().split('T')[0];
+      const docPreview = `[Verified Document Attached]\nFile Name: ${file.name}\nSize: ${(file.size / 1024).toFixed(1)} KB\nDocument Type: ${file.type || 'Resume Document'}\nAttached On: ${today}\nApplicant: ${name}\nEmail: ${email}\nPhone: ${phone}\nSkills: ${skills.join(', ')}`;
+      uploadResume(file.name, docPreview);
+    }
   };
 
   const handleSaveProfile = (e: React.FormEvent) => {
@@ -143,6 +151,7 @@ export const ProfileView: React.FC = () => {
   };
 
   const downloadSimulatedResume = () => {
+    if (!user) return;
     const content = user.resumeFileContent || `Resume for ${user.name}\nEmail: ${user.email}\nPhone: ${user.phone}\nDegree: ${degree} (${institution})\nSkills: ${skills.join(', ')}`;
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);

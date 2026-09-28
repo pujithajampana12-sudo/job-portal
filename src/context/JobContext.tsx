@@ -54,7 +54,20 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [user, setUser] = useState<User | null>(() => {
     try {
       const savedUser = localStorage.getItem('nextstep_current_user');
-      if (savedUser) return JSON.parse(savedUser);
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        if (parsed && typeof parsed === 'object') {
+          return {
+            ...parsed,
+            skills: Array.isArray(parsed.skills) ? parsed.skills : [],
+            education: parsed.education || {
+              degree: 'Bachelor Degree',
+              institution: 'University',
+              graduationYear: '2026'
+            }
+          };
+        }
+      }
       // Default to demo fresher user for immediate smooth browsing
       return DEMO_USERS.fresher.user;
     } catch {
@@ -261,7 +274,14 @@ export const JobProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   // Profile Update
   const updateUserProfile = (updated: Partial<User>) => {
     if (!user) return;
-    const updatedUser = { ...user, ...updated };
+    const updatedUser: User = {
+      ...user,
+      ...updated,
+      education: updated.education
+        ? { ...user.education, ...updated.education }
+        : user.education,
+      skills: updated.skills ? updated.skills : user.skills
+    };
     setUser(updatedUser);
 
     setRegisteredUsers(prev =>

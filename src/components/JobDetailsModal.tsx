@@ -29,6 +29,7 @@ export const JobDetailsModal: React.FC = () => {
     toggleSaveJob,
     savedJobIds,
     setActiveTab,
+    openAuthModal,
     showToast
   } = useJobContext();
 
@@ -65,7 +66,7 @@ export const JobDetailsModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6">
       <div className="relative bg-white rounded-xl shadow-2xl max-w-3xl w-full border border-slate-200 overflow-hidden my-4 max-h-[92vh] flex flex-col">
         {/* Top Header */}
         <div className="px-6 py-5 border-b border-slate-200 flex items-start justify-between bg-slate-50/70">
@@ -215,7 +216,7 @@ export const JobDetailsModal: React.FC = () => {
                   </div>
                   <div>
                     <span className="text-slate-500">Education:</span>{' '}
-                    <strong className="text-slate-900">{user?.education.degree || 'Degree'}</strong>
+                    <strong className="text-slate-900">{user?.education?.degree || 'Degree'}</strong>
                   </div>
                 </div>
 
@@ -393,7 +394,14 @@ export const JobDetailsModal: React.FC = () => {
               </button>
             ) : (
               <button
-                onClick={() => setIsApplying(true)}
+                onClick={() => {
+                  if (!user) {
+                    showToast('Please sign in or register to apply for this job.', 'info');
+                    openAuthModal('login');
+                    return;
+                  }
+                  setIsApplying(true);
+                }}
                 className="px-6 py-2.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition-colors flex items-center gap-1.5"
               >
                 <span>Apply Now</span>

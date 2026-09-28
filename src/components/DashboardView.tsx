@@ -206,7 +206,7 @@ export const DashboardView: React.FC = () => {
               </h2>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              Matched against your skills ({user ? user.skills.slice(0, 4).join(', ') : 'Java, React, SQL'}) and experience level
+              Matched against your skills ({user?.skills?.length ? user.skills.slice(0, 4).join(', ') : 'Java, React, SQL'}) and experience level
             </p>
           </div>
 
@@ -421,7 +421,7 @@ export const DashboardView: React.FC = () => {
               <div className="flex items-center justify-between p-2.5 bg-slate-800 rounded-lg">
                 <span className="text-slate-300">Skills Listed</span>
                 <span className="text-blue-400 font-semibold tabular-nums">
-                  {user ? user.skills.length : 0} Skills
+                  {user?.skills?.length || 0} Skills
                 </span>
               </div>
               <div className="flex items-center justify-between p-2.5 bg-slate-800 rounded-lg">

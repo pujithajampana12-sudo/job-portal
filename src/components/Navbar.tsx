@@ -69,7 +69,7 @@ export const Navbar: React.FC = () => {
             >
               <span>Applications</span>
               {pendingApplicationsCount > 0 && (
-                <span className="text-xs px-1.5 py-0.2 bg-blue-100 text-blue-800 rounded font-semibold tabular-nums">
+                <span className="text-xs px-1.5 py-0.5 bg-blue-100 text-blue-800 rounded font-semibold tabular-nums">
                   {pendingApplicationsCount}
                 </span>
               )}
