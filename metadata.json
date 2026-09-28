@@ -1,0 +1,6 @@
+{
+  "name": "NextStep Careers - Modern Job Portal",
+  "description": "A modern and user-friendly job portal for students, freshers, and experienced job seekers to search jobs, track applications, and manage careers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
